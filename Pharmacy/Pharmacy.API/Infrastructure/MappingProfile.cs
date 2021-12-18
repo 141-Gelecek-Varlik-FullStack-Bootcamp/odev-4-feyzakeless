@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Pharmacy.Model.ModelLogin;
 using Pharmacy.Model.ModelMedicine;
 using Pharmacy.Model.ModelPrescription;
 using Pharmacy.Model.ModelUser;
@@ -12,6 +13,10 @@ namespace Pharmacy.API.Infrastructure
             //Kullanici Mapping
             CreateMap<UserViewModel, Pharmacy.DB.Entities.User>();
             CreateMap<Pharmacy.DB.Entities.User, UserViewModel>();
+
+            //Login Mapping
+            CreateMap<LoginViewModel, Pharmacy.DB.Entities.User>();
+            CreateMap<Pharmacy.DB.Entities.User, LoginViewModel>();
 
             //İlac Mapping
 
