@@ -167,12 +167,21 @@ namespace Pharmacy.Service.MedicineServiceLayer
 
             using (var context = new PharmacyContext())
             {
+                //Toplam ilac sayısını alındı
                 result.TotalCount = context.Medicine.Count();
                 TotalMedicine = result.TotalCount;
 
+                //İlac sayisi, sayfada gösterilecek urun sayisina bolundu ve kaç sayfa olacaği bulundu.
                 subTotal = TotalMedicine / productNumOnPage;
+
+                /*Kalan varsa yukari sayiya dondurme. Mesela; 102 urun varsa ve sayfada 20 urun gosterilmesi isteniyorsa,
+                kalan 2 oldugu icin 5 sayfa degil, 6 sayfa olması gerekir ve son sayfada 2 urun olmasi gerekir. Math.Ceiling
+                5,1 cikan degeri 6 ya tamamliyor.*/
                 totalPageNumber =  Math.Ceiling(subTotal);
-                    
+
+                /*Skip; O kadar urun atla demek. Mesela; 7 urun var, bir sayfada 2 urun gosterilsin ve 3.sayfa gosterilsin isteniyor.
+                 (3-1)*2 = 4. Yani 4 urunu atla 5.urunden basla demek.*/
+                //Take; Kac urun alınacağını soylers.
                 var medicines = context.Medicine
                                         .OrderBy(i => i.Id)
                                         .Skip((whichPageNumber - 1) * productNumOnPage)
@@ -193,30 +202,30 @@ namespace Pharmacy.Service.MedicineServiceLayer
             var result = new General<ListMedicineViewModel>();
             using (var context = new PharmacyContext())
             {
-                var medicines = context.Medicine.Where(x => x.IsActive && !x.IsDeleted);
+                var medicines = context.Medicine.Where(x => !x.IsDeleted);
 
                 switch (parameter)
                 {
-                    case "AToZ":
+                    case "AToZ": // A'dan Z'ye siralama
                         medicines = medicines.OrderBy(x => x.Name);
                         break;
-                    case "ZToA":
+                    case "ZToA": // Z'den A'ya siralama
                         medicines = medicines.OrderByDescending(x => x.Name);
                         break;
-                    case "PriceLowToHigh":
+                    case "PriceLowToHigh": // Dusuk fiyattan yuksek fiyata siralama
                         medicines = medicines.OrderBy(x => x.Price);
                         break;
-                    case "PriceHighToLow":
+                    case "PriceHighToLow": // Yuksek fiyattan dusuk fiyata siralama
                         medicines = medicines.OrderByDescending(x => x.Price);
                         break;
-                    case "FirstInsertDate":
+                    case "FirstInsertDate": // İlk eklenen tarihe gore siralama
                         medicines = medicines.OrderBy(x => x.Idate);
                         break;
-                    case "LastInsertDate":
+                    case "LastInsertDate": // Son eklenen tarihe gore siralama
                         medicines = medicines.OrderByDescending(x => x.Idate);
                         break;
                     default:
-                        medicines = medicines.OrderBy(x => x.Id);
+                        medicines = medicines.OrderBy(x => x.Id); //Default u id ye gore siralama
                         break;
                 }
 
@@ -236,7 +245,8 @@ namespace Pharmacy.Service.MedicineServiceLayer
 
                 if (!String.IsNullOrEmpty(filterLetter))
                 {
-                    medicines = medicines.Where(x => x.Name.StartsWith(filterLetter));
+                    //İlac isimlerinin hangi harf ile basladigi aliniyor
+                    medicines = medicines.Where(x => x.Name.StartsWith(filterLetter)); 
                 }
                 else
                 {
