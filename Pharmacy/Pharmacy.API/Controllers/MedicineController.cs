@@ -87,11 +87,11 @@ namespace Pharmacy.API.Controllers
         /*---------------------- Week 3 -------------------------*/
 
         //İlac Listeleme
-        [HttpGet]
-        public General<MedicineViewModel> GetMedicines()
-        {
-            return medicineService.GetMedicines();
-        }
+        //[HttpGet]
+        //public General<MedicineViewModel> GetMedicines()
+        //{
+        //    return medicineService.GetMedicines();
+        //}
 
         
 
