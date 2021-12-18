@@ -44,6 +44,7 @@ namespace Pharmacy.API.Controllers
                     memoryCache.Set(CacheKeys.Login, _response.Entity);
                 }
                 response.Entity = true;
+                response.IsSuccess = true;
 
             }
 
